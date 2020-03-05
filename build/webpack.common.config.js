@@ -1,23 +1,14 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { HotModuleReplacementPlugin } = require('webpack');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src/index.js'),
+  entry: path.resolve(__dirname, '../src/index.js'),
   output: {
     filename: 'bundle.[hash].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../dist'),
     // 静态资源存放地址
     publicPath: '/'
-  },
-  devtool: 'cheap-module-eval-source-map',
-  mode: 'development',
-  devServer: {
-    port: 3060,
-    open: true,
-    hot: true,
-    hotOnly: true,
   },
   module: {
     rules: [
@@ -33,7 +24,8 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              modules: true
+              modules: true,
+              importLoaders: 2
             }
           },
           'postcss-loader'
@@ -91,18 +83,11 @@ module.exports = {
       }
     ]
   },
-  optimization: {
-    // Tree Shaking
-    // 开发环境设置，生产环境不需设置
-    usedExport: true
-  },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'react-boilerplate',
-      template: path.resolve(__dirname, 'index.html')
+      template: path.resolve(__dirname, '../index.html')
     }),
     new CleanWebpackPlugin(),
-    // 模块热更新插件
-    new HotModuleReplacementPlugin(),
   ]
 };

@@ -5,9 +5,12 @@
   "repository": "https://github.com/joe-peak/react-boilerplate.git",
   "author": "Zhouchanglong <lon.c.zhou@gmail.com>",
   "license": "MIT",
+  "sideEffects": [
+    "*.css"
+  ],
   "scripts": {
-    "start": "webpack-dev-server",
-    "build": "webpack  --watch"
+    "start": "webpack-dev-server --config ./build/webpack.dev.config.js",
+    "build": "webpack  --config ./build/webpack.prod.config.js --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
@@ -29,8 +32,12 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/runtime": "^7.8.7",
+    "@babel/runtime-corejs3": "^7.8.7",
     "classnames": "^2.2.6",
     "react": "^16.13.0",
-    "react-dom": "^16.13.0"
+    "react-dom": "^16.13.0",
+    "webpack-merge": "^4.2.2"
   }
 }
