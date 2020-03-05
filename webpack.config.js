@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { HotModuleReplacementPlugin } = require('webpack');
 
 module.exports = {
   entry: path.resolve(__dirname, 'src/index.js'),
@@ -10,10 +11,13 @@ module.exports = {
     // 静态资源存放地址
     publicPath: '/'
   },
+  devtool: 'cheap-module-eval-source-map',
   mode: 'development',
   devServer: {
     port: 3060,
-    open: true
+    open: true,
+    hot: true,
+    hotOnly: true,
   },
   module: {
     rules: [
@@ -77,7 +81,7 @@ module.exports = {
         use: {
           loader: 'url-loader',
           options: {
-            name: '[name].[ext]',
+            name: '[name].[hash].[ext]',
             outputPath: 'public/images/',
             limit: 8192,
             // limit: 381920,
@@ -93,5 +97,7 @@ module.exports = {
       template: path.resolve(__dirname, 'index.html')
     }),
     new CleanWebpackPlugin(),
+    // 模块热更新插件
+    new HotModuleReplacementPlugin(),
   ]
 };

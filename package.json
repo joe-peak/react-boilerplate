@@ -6,8 +6,8 @@
   "author": "Zhouchanglong <lon.c.zhou@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack",
-    "dev": "webpack-dev-server --watch"
+    "start": "webpack-dev-server",
+    "build": "webpack  --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

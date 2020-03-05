@@ -1,12 +1,13 @@
-import styles from './style.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import layers from './public/layers.png';
-// import className from 'classnames';
+import App from './App.jsx';
 
-const App = () => (<>
-  <div className={styles.foo}>React App</div>
-  <img src={layers} />
-</>);
+const render = () => ReactDOM.render(<App/>, document.querySelector('#root'));
 
-ReactDOM.render(<App/>, document.querySelector('#root'));
+render();
+
+if (module.hot) {
+  module.hot.accept(('./App.jsx',() => {
+    render();
+  }));
+}
