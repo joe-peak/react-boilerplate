@@ -112,8 +112,26 @@ module.exports = {
       cacheGroups: {
         react: {
           test: /(react|react-dom|prop-types)[\\/]/,
-          chunks: 'initial'
+          chunks: 'initial',
+          name: 'react',
+          priority: 9,
+        },
+        commons: {
+          chunks: "initial",
+          minChunks: 2,
+          name: "commons",
+          maxInitialRequests: 5,
+          // minSize: 0, // 默认是30kb,
+          priority: 2,
+        },
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all',
         }
+        // default: {
+        //   name: 'vendor'
+        // }
       }
   },
 }
