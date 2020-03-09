@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HappyPack = require('happypack');
 
 const isProd = process.env.NODE_ENV === 'production';
 console.log('isProd:', isProd);
@@ -21,74 +22,71 @@ module.exports = {
       {
         exclude: /node_modules/,
         test: /\.(j|t)sx?$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              compact: false,
-            },
-            // 'babel-loader?compact=false'
-          },
-          'eslint-loader',
-          // 'ts-loader'
-        ],
+        use: 'happypack/loader?id=babel',
+        // use: [
+        //   {
+        //     loader: 'babel-loader',
+        //     options: {
+        //       compact: false,
+        //     },
+        //     // 'babel-loader?compact=false'
+        //   },
+        //   'eslint-loader',
+        //   // 'ts-loader'
+        // ],
       },
       {
         test: /\.css$/,
-        use: [
-          // 'style-loader',
-          // {
-          //   loader: MiniCssExtractPlugin.loader,
-          //   options: {
-          //     esModule: false,
-          //     publicPath: '/'
-          //   }
-          // },
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 2,
-            },
-          },
-          'postcss-loader',
-        ],
+        use: 'happypack/loader?id=css',
+        // use: [
+        //   // 'style-loader',
+        //   // {
+        //   //   loader: MiniCssExtractPlugin.loader,
+        //   //   options: {
+        //   //     esModule: false,
+        //   //     publicPath: '/'
+        //   //   }
+        //   // },
+        //   MiniCssExtractPlugin.loader,
+        //   {
+        //     loader: 'css-loader',
+        //     options: {
+        //       modules: true,
+        //       importLoaders: 2,
+        //     },
+        //   },
+        //   'postcss-loader',
+        // ],
       },
       {
         test: /\.less$/,
-        use: [
-          // 'style-loader',
-          // MiniCssExtractPlugin.loader,
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              esModule: false,
-              hmr: !isProd,
-              reloadAll: !isProd,
-            },
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-            },
-          },
-          'postcss-loader',
-          'less-loader',
-        ],
+        use: 'happypack/loader?id=less',
+        // use: [
+        //   // 'style-loader',
+        //   // MiniCssExtractPlugin.loader,
+        //   {
+        //     loader: MiniCssExtractPlugin.loader,
+        //     options: {
+        //       esModule: false,
+        //       hmr: !isProd,
+        //       reloadAll: !isProd,
+        //     },
+        //   },
+        //   {
+        //     loader: 'css-loader',
+        //     options: {
+        //       modules: true,
+        //     },
+        //   },
+        //   'postcss-loader',
+        //   'less-loader',
+        // ],
       },
-      // {
-      //   test: /\.(jpe?g|png|gif)/i,
-      //   use: {
-      //   file-loader 把小文件转换为base64格式
-      //     loader: 'file-loader',
-      //     options: {
-      //       name: '[name].[ext]',
-      //       outputPath: 'public/images/',
-      //     }
-      //   }
-      // },
+      {
+        test: /\.(eot|ttf|svg)$/,
+        // file-loader 把小文件转换为base64格式
+        use: 'file-loader',
+      },
       {
         test: /\.(jpe?g|png|gif)/i,
         use: {
@@ -117,6 +115,60 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: isProd ? 'style.[hash].css' : 'style.css',
       chunkFilename: isProd ? 'style.[hash].css' : 'style.css',
+    }),
+    new HappyPack({
+      id: 'babel',
+      loaders: [
+        {
+          loader: 'babel-loader',
+          options: {
+            compact: false,
+          },
+        },
+      ],
+    }),
+    new HappyPack({
+      id: 'css',
+      loaders: [
+        'style-loader',
+        {
+          loader: MiniCssExtractPlugin.loader,
+          options: {
+            esModule: false,
+            publicPath: '/',
+          },
+        },
+        {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            importLoaders: 2,
+          },
+        },
+        'postcss-loader',
+      ],
+    }),
+    new HappyPack({
+      id: 'less',
+      loaders: [
+        'style-loader',
+        {
+          loader: MiniCssExtractPlugin.loader,
+          options: {
+            esModule: false,
+            publicPath: '/',
+          },
+        },
+        {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            importLoaders: 2,
+          },
+        },
+        'less-loader',
+        'postcss-loader',
+      ],
     }),
   ],
   optimization: {
