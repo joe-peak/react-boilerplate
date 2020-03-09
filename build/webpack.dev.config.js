@@ -10,14 +10,23 @@ module.exports = webpackMerge(commonConfig, {
     open: true,
     hot: true,
     hotOnly: true,
+    historyApiFallback: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3030/api',
+        changeOrigin: true,
+        headers: {},
+        secure: true,
+      },
+    },
   },
   optimization: {
     // Tree Shaking
     // 开发环境设置，生产环境不需设置
-    usedExports: true
+    usedExports: true,
   },
   plugins: [
     // 模块热更新插件
     new HotModuleReplacementPlugin(),
-  ]
+  ],
 });

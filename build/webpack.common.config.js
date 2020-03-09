@@ -2,25 +2,36 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const isProd = process.env.NODE_ENV === 'production';
 
+const isProd = process.env.NODE_ENV === 'production';
 console.log('isProd:', isProd);
 
 module.exports = {
-  entry: path.resolve(__dirname, '../src/index.js'),
+  entry: path.resolve(__dirname, '../src/index'),
   output: {
     // filename 分包后输出的chunks的文件名
     filename: '[name].[hash:8].bundle.js',
+    chunkFilename: '[name].chunk.js',
     path: path.resolve(__dirname, '../dist'),
     // 静态资源存放地址
-    publicPath: '/'
+    publicPath: '/',
   },
   module: {
     rules: [
       {
         exclude: /node_modules/,
-        test: /\.jsx?$/,
-        use: 'babel-loader?compact=false'
+        test: /\.(j|t)sx?$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              compact: false,
+            },
+            // 'babel-loader?compact=false'
+          },
+          'eslint-loader',
+          // 'ts-loader'
+        ],
       },
       {
         test: /\.css$/,
@@ -38,34 +49,34 @@ module.exports = {
             loader: 'css-loader',
             options: {
               modules: true,
-              importLoaders: 2
-            }
+              importLoaders: 2,
+            },
           },
-          'postcss-loader'
-        ]
+          'postcss-loader',
+        ],
       },
       {
         test: /\.less$/,
         use: [
           // 'style-loader',
           // MiniCssExtractPlugin.loader,
-           {
+          {
             loader: MiniCssExtractPlugin.loader,
             options: {
               esModule: false,
               hmr: !isProd,
               reloadAll: !isProd,
-            }
+            },
           },
           {
             loader: 'css-loader',
             options: {
-              modules: true
-            }
+              modules: true,
+            },
           },
           'postcss-loader',
-          'less-loader'
-        ]
+          'less-loader',
+        ],
       },
       // {
       //   test: /\.(jpe?g|png|gif)/i,
@@ -88,21 +99,25 @@ module.exports = {
             limit: 8192,
             // limit: 381920,
             // fallback: require.resolve('file-loader')
-          }
-        }
-      }
-    ]
+          },
+        },
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+    alias: {},
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'react-boilerplate',
-      template: path.resolve(__dirname, '../index.html')
+      template: path.resolve(__dirname, '../index.html'),
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: isProd ? 'style.[hash].css': 'style.css',
-      chunkFilename: isProd ? 'style.[hash].css' : 'style.css'
-    })
+      filename: isProd ? 'style.[hash].css' : 'style.css',
+      chunkFilename: isProd ? 'style.[hash].css' : 'style.css',
+    }),
   ],
   optimization: {
     splitChunks: {
@@ -117,9 +132,9 @@ module.exports = {
           priority: 9,
         },
         commons: {
-          chunks: "initial",
+          chunks: 'initial',
           minChunks: 2,
-          name: "commons",
+          name: 'commons',
           maxInitialRequests: 5,
           // minSize: 0, // 默认是30kb,
           priority: 2,
@@ -128,11 +143,11 @@ module.exports = {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendor',
           chunks: 'all',
-        }
+        },
         // default: {
         //   name: 'vendor'
         // }
-      }
+      },
+    },
   },
-}
 };
