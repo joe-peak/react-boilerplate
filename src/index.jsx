@@ -13,5 +13,3 @@ if (module.hot) {
     render();
   }));
 }
-
-
