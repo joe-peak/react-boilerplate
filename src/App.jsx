@@ -4,7 +4,7 @@ import layers from './public/layers.png';
 
 const arr = [1, 2, 3];
 console.log(arr.includes(3));
-console.log(Array.from("hello"));
+console.log(Array.from('hello'));
 
 const App = () => (
   <>
